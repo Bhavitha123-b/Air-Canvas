@@ -10,7 +10,7 @@ This project demonstrates **computer vision, real-time gesture recognition, and 
 # Features
 
 * ✋ **Hand Gesture Drawing** – Draw on the screen using your index finger.
-* 🎨 **Dynamic Brush Thickness** – Brush size adjusts based on finger distance.
+* 🎨 **Dynamic Brush Thickness** – we can change brush size.
 * 🧽 **Palm Eraser Mode** – Open palm gesture activates erase mode.
 * 🔷 **Automatic Shape Detection**
 
@@ -41,7 +41,7 @@ Example interactions:
 * Erase parts of the drawing using palm gesture
 * Save the canvas as an image
 
-*(You can add screenshots or a demo video here)*
+
 
 ---
 
