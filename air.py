@@ -38,8 +38,13 @@ class Config:
     PALETTE_HEIGHT = 0  # No top palette - floating instead
     TOOLBAR_WIDTH = 0  # No left toolbar
     BOTTOM_BAR_HEIGHT = 0  # No bottom bar
+<<<<<<< HEAD
     ALPHA_CANVAS = 0.92  # More canvas visible
     ALPHA_FRAME = 0.08  # Less camera overlay
+=======
+    ALPHA_CANVAS = 0.65  # CHANGED: Less canvas (was 0.92)
+    ALPHA_FRAME = 0.35  # CHANGED: More camera visible! (was 0.08)
+>>>>>>> 1f543d817369362034d67577fe51bc4b16b4161f
     
     # Modern glassmorphism colors 🎨
     BG_COLOR = (15, 15, 20)  # Deep dark
@@ -548,6 +553,7 @@ def draw_button(img, x, y, w, h, text, icon_type=None, enabled=True, selected=Fa
                cv2.FONT_HERSHEY_SIMPLEX, 0.55, text_color, 2, cv2.LINE_AA)
 
 def draw_color_palette(img, x, y, w, h, colors, color_names, current_idx):
+<<<<<<< HEAD
     """Beautiful floating color palette at bottom center with glassmorphism ✨"""
     img_h, img_w = img.shape[:2]
     
@@ -579,6 +585,39 @@ def draw_color_palette(img, x, y, w, h, colors, color_names, current_idx):
                  (palette_x - 10, palette_y), 
                  (palette_x + palette_width + 10, palette_y + palette_height),
                  Config.ACCENT_COLOR, 2)
+=======
+    """Truly floating color palette at TOP center - minimal & beautiful ✨"""
+    img_h, img_w = img.shape[:2]
+    
+    # Palette dimensions - SMALLER and cleaner
+    color_size = 38
+    spacing = 8
+    num_colors = len(colors)
+    palette_width = (color_size + spacing) * num_colors + 20
+    palette_height = 55
+    
+    # Position at TOP center
+    palette_x = (img_w - palette_width) // 2
+    palette_y = 15
+    
+    # Super transparent glassmorphism background
+    overlay = img.copy()
+    
+    # Rounded rectangle with blur effect
+    cv2.rectangle(overlay, 
+                 (palette_x - 10, palette_y - 5), 
+                 (palette_x + palette_width + 10, palette_y + palette_height),
+                 (15, 15, 25), -1)
+    
+    # Blend with HIGH transparency for floating effect
+    cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
+    
+    # Subtle neon border
+    cv2.rectangle(img, 
+                 (palette_x - 10, palette_y - 5), 
+                 (palette_x + palette_width + 10, palette_y + palette_height),
+                 Config.ACCENT_COLOR, 1)
+>>>>>>> 1f543d817369362034d67577fe51bc4b16b4161f
     
     # Draw color circles
     for i, (col, name) in enumerate(zip(colors, color_names)):
@@ -586,12 +625,22 @@ def draw_color_palette(img, x, y, w, h, colors, color_names, current_idx):
         cy = palette_y + palette_height // 2
         center = (cx, cy)
         
+<<<<<<< HEAD
         # Animated glow for selected color
         if i == current_idx:
             for r in range(color_size // 2 + 12, color_size // 2, -2):
                 alpha = (color_size // 2 + 12 - r) / 12
                 glow_color = tuple(int(c * 0.7 + 200 * 0.3) for c in col)
                 cv2.circle(img, center, r, glow_color, 1)
+=======
+        # Soft glow for selected color
+        if i == current_idx:
+            for r in range(color_size // 2 + 8, color_size // 2, -1):
+                alpha = (color_size // 2 + 8 - r) / 8
+                glow_overlay = img.copy()
+                cv2.circle(glow_overlay, center, r, col, -1)
+                cv2.addWeighted(glow_overlay, alpha * 0.3, img, 1 - alpha * 0.3, 0, img)
+>>>>>>> 1f543d817369362034d67577fe51bc4b16b4161f
         
         # Main color circle
         cv2.circle(img, center, color_size // 2, col, -1)
@@ -599,6 +648,7 @@ def draw_color_palette(img, x, y, w, h, colors, color_names, current_idx):
         # White ring
         cv2.circle(img, center, color_size // 2 + 1, (255, 255, 255), 2)
         
+<<<<<<< HEAD
         # Selection indicator - neon ring
         if i == current_idx:
             cv2.circle(img, center, color_size // 2 + 6, Config.ACCENT_COLOR, 3)
@@ -638,11 +688,26 @@ def draw_toolbar(img, x, y, w, h, brush_size, strokes_count, redo_count, shape_m
     if freeze_time > 0:
         timer_x = img_w // 2 - 80
         timer_y = 30
+=======
+        # Selection indicator - glowing ring
+        if i == current_idx:
+            cv2.circle(img, center, color_size // 2 + 5, Config.ACCENT_COLOR, 2)
+
+def draw_toolbar(img, x, y, w, h, brush_size, strokes_count, redo_count, shape_mode, freeze_time):
+    """Minimal freeze timer only - centered ✨"""
+    img_h, img_w = img.shape[:2]
+    
+    # Only show freeze timer when analyzing (no permanent UI)
+    if freeze_time > 0:
+        timer_x = img_w // 2 - 80
+        timer_y = img_h - 100
+>>>>>>> 1f543d817369362034d67577fe51bc4b16b4161f
         
         progress = freeze_time / Config.STROKE_FREEZE_TIME
         
         # Glass background
         overlay = img.copy()
+<<<<<<< HEAD
         cv2.rectangle(overlay, (timer_x, timer_y - 10), 
                      (timer_x + 160, timer_y + 30),
                      (20, 20, 30), -1)
@@ -731,6 +796,136 @@ def draw_status_bar(img, x, y, w, h, mode, show_landmarks, erasing_mode, shape_m
         
         cv2.putText(img, "MOVE", (badge_x, badge_y + 23),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 150, 255), 2, cv2.LINE_AA)
+=======
+        cv2.rectangle(overlay, (timer_x - 10, timer_y - 10), 
+                     (timer_x + 170, timer_y + 35),
+                     (15, 15, 25), -1)
+        cv2.addWeighted(overlay, 0.5, img, 0.5, 0, img)
+        
+        # Border
+        cv2.rectangle(img, (timer_x - 10, timer_y - 10), 
+                     (timer_x + 170, timer_y + 35),
+                     Config.WARNING_COLOR, 1)
+        
+        # Analyzing text
+        cv2.putText(img, "ANALYZING...", (timer_x, timer_y + 5),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, Config.WARNING_COLOR, 1, cv2.LINE_AA)
+        
+        # Progress bar
+        bar_y = timer_y + 18
+        bar_w = 150
+        cv2.rectangle(img, (timer_x, bar_y), 
+                     (timer_x + bar_w, bar_y + 6), 
+                     (30, 30, 40), -1)
+        
+        fill_w = int(bar_w * progress)
+        cv2.rectangle(img, (timer_x, bar_y), 
+                     (timer_x + fill_w, bar_y + 6), 
+                     Config.ACCENT_COLOR, -1)
+
+def draw_shortcuts_panel(img):
+    """Beautiful floating shortcuts panel - bottom right corner ✨"""
+    img_h, img_w = img.shape[:2]
+    
+    # Panel dimensions - compact and clean
+    panel_w = 200
+    panel_h = 160
+    panel_x = img_w - panel_w - 15
+    panel_y = img_h - panel_h - 15
+    
+    # Super transparent glassmorphism
+    overlay = img.copy()
+    cv2.rectangle(overlay, 
+                 (panel_x, panel_y), 
+                 (panel_x + panel_w, panel_y + panel_h),
+                 (12, 12, 20), -1)
+    
+    # Blend with high transparency
+    cv2.addWeighted(overlay, 0.35, img, 0.65, 0, img)
+    
+    # Subtle border
+    cv2.rectangle(img, 
+                 (panel_x, panel_y), 
+                 (panel_x + panel_w, panel_y + panel_h),
+                 (80, 80, 100), 1)
+    
+    # Title
+    cv2.putText(img, "SHORTCUTS", (panel_x + 10, panel_y + 20),
+               cv2.FONT_HERSHEY_SIMPLEX, 0.45, Config.ACCENT_COLOR, 1, cv2.LINE_AA)
+    
+    # Shortcuts list - clean and minimal
+    shortcuts = [
+        ("G", "Shapes"),
+        ("M", "Move"),
+        ("C", "Clear"),
+        ("U", "Undo"),
+        ("S", "Save"),
+        ("+/-", "Brush"),
+        ("Q", "Quit"),
+    ]
+    
+    y_offset = panel_y + 42
+    for key, action in shortcuts:
+        # Key badge - small box
+        key_x = panel_x + 12
+        
+        # Draw key background
+        key_w = 28
+        cv2.rectangle(img, (key_x, y_offset - 12), (key_x + key_w, y_offset + 4),
+                     (40, 40, 55), -1)
+        cv2.rectangle(img, (key_x, y_offset - 12), (key_x + key_w, y_offset + 4),
+                     Config.ACCENT_COLOR, 1)
+        
+        # Key text
+        cv2.putText(img, key, (key_x + 4, y_offset),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255, 255, 255), 1, cv2.LINE_AA)
+        
+        # Action text
+        cv2.putText(img, action, (key_x + key_w + 10, y_offset),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.38, (200, 200, 220), 1, cv2.LINE_AA)
+        
+        y_offset += 18
+
+def draw_status_bar(img, x, y, w, h, mode, show_landmarks, erasing_mode, shape_mode, move_mode=False):
+    """Ultra minimal - just small mode badges when active ✨"""
+    img_h, img_w = img.shape[:2]
+    
+    # Only show TINY badges when modes are active - top right
+    badge_x = img_w - 90
+    badge_y = 15
+    
+    # SHAPES badge (only when enabled)
+    if shape_mode:
+        overlay = img.copy()
+        cv2.rectangle(overlay, (badge_x - 8, badge_y), 
+                     (badge_x + 70, badge_y + 28),
+                     (15, 15, 25), -1)
+        cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
+        
+        cv2.rectangle(img, (badge_x - 8, badge_y), 
+                     (badge_x + 70, badge_y + 28),
+                     Config.ACCENT_COLOR, 1)
+        
+        cv2.putText(img, "SHAPES", (badge_x, badge_y + 18),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, Config.ACCENT_COLOR, 1, cv2.LINE_AA)
+        
+        badge_x -= 90
+    
+    # MOVE badge (only when enabled)
+    if move_mode:
+        overlay = img.copy()
+        cv2.rectangle(overlay, (badge_x - 8, badge_y), 
+                     (badge_x + 65, badge_y + 28),
+                     (15, 15, 25), -1)
+        cv2.addWeighted(overlay, 0.4, img, 0.6, 0, img)
+        
+        cv2.rectangle(img, (badge_x - 8, badge_y), 
+                     (badge_x + 65, badge_y + 28),
+                     (255, 150, 255), 1)
+        
+        cv2.putText(img, "MOVE", (badge_x, badge_y + 18),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 150, 255), 1, cv2.LINE_AA)
+>>>>>>> 1f543d817369362034d67577fe51bc4b16b4161f
 
 # ========================
 # Webcam setup
@@ -1108,6 +1303,7 @@ while True:
                     current_stroke = []
                     redo_stack = []
                 
+<<<<<<< HEAD
                 # Check if selecting color from floating palette (bottom of screen)
                 num_colors = len(colors)
                 color_size = Config.FLOATING_PALETTE_SIZE
@@ -1121,6 +1317,21 @@ while True:
                 
                 # Check if y is in palette area
                 if palette_y <= y <= palette_y + palette_height:
+=======
+                # Check if selecting color from floating palette at TOP
+                num_colors = len(colors)
+                color_size = 38  # Match palette size
+                spacing = 8
+                palette_width = (color_size + spacing) * num_colors + 20
+                palette_height = 55
+                
+                # Palette at TOP center
+                palette_x = (w - palette_width) // 2
+                palette_y = 15
+                
+                # Check if y is in palette area at TOP
+                if palette_y - 5 <= y <= palette_y + palette_height:
+>>>>>>> 1f543d817369362034d67577fe51bc4b16b4161f
                     for i in range(num_colors):
                         cx = palette_x + 10 + i * (color_size + spacing) + color_size // 2
                         cy = palette_y + palette_height // 2
@@ -1188,6 +1399,12 @@ while True:
     draw_status_bar(combined, 0, 0, w, 0, mode, show_hand_landmarks, erasing_with_palm, 
                    shape_recognition_enabled, move_mode_enabled)
     
+<<<<<<< HEAD
+=======
+    # Beautiful shortcuts panel - bottom right
+    draw_shortcuts_panel(combined)
+    
+>>>>>>> 1f543d817369362034d67577fe51bc4b16b4161f
     # Draw cursor indicator when drawing
     if mode == "DRAW" and not erasing_with_palm and not move_mode_enabled:
         # Neon cursor ring
